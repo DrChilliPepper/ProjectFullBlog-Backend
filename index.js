@@ -10,6 +10,8 @@ import cors from "cors"
 
 dotenv.config();
 
+const PORT = process.env.PORT || 5000;
+
 const app = express()
 app.use(cors(process.env.CLIENT_URL))
 app.use(clerkMiddleware())
@@ -38,7 +40,7 @@ app.use((error, req, res, next) => {
     })
 })
 
-app.listen(3000, () => {
+app.listen(PORT, () => {
     connectDB()
-    console.log("Server!")
+    console.log("Server running!")
 })
