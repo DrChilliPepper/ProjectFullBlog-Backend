@@ -77,6 +77,14 @@ export const getPost = async (req, res) => {
     res.status(200).json(post);
 }
 export const createPost = async (req, res) => {
+    const { title, category, desc, content } = req.body;
+
+    if (!title || !title.trim()) {
+        return res.status(400).json("Title dalo baa")
+    }
+    if (!content || content.trim() === "<p><br></p>") {
+        return res.status(400).json("Content daalo baa");
+    }
 
     const { userId: clerkUserId } = req.auth();
 
