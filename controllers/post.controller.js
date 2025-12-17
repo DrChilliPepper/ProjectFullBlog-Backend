@@ -2,6 +2,10 @@ import ImageKit from "imagekit";
 import Post from "../models/post.model.js"
 import User from "../models/user.model.js"
 
+const normalizeContent = (content) => {
+    if (Array.isArray(content)) return content.join("");
+    return content;
+}
 export const getPosts = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 2;
@@ -110,7 +114,7 @@ export const createPost = async (req, res) => {
         counter++;
     }
 
-    const newPost = new Post({ user: user._id, slug, ...req.body });
+    const newPost = new Post({ user: user._id, slug, ...req.body, content: normalizeContent(req.body.content) });
 
     const post = await newPost.save();
     res.status(200).json(post);
@@ -212,7 +216,7 @@ export const updatePost = async (req, res) => {
             title: req.body.title,
             desc: req.body.desc,
             category: req.body.category,
-            content: req.body.content,
+            content: normalizeContent(req.body.content),
             img: req.body.img,
         },
         { new: true }
