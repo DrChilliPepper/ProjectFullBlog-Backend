@@ -181,3 +181,42 @@ export const featurePost = async (req, res) => {
 
     return res.status(200).json(updatedPost);
 };
+export const updatePost = async (req, res) => {
+    const { userId: clerkUserId, sessionClaims } = req.auth();
+
+    if (!clerkUserId) {
+        return res.status(401).json("Not authorized");
+    }
+
+    const role = sessionClaims?.metadata?.role || "user";
+    const postId = req.params.id;
+
+    const user = await User.findOne({ clerkUserId });
+    if (!user) {
+        return res.status(404).json("User not found");
+    }
+
+    const post = await Post.findById(postId);
+    if (!post) {
+        return res.status(404).json("Post not found");
+    }
+
+    // only author or admin can edit
+    if (post.user.toString() !== user._id.toString() && role !== "admin") {
+        return res.status(403).json("You cannot edit this post");
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(
+        postId,
+        {
+            title: req.body.title,
+            desc: req.body.desc,
+            category: req.body.category,
+            content: req.body.content,
+            img: req.body.img,
+        },
+        { new: true }
+    );
+
+    res.status(200).json(updatedPost);
+};
