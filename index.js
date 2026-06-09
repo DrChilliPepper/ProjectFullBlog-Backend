@@ -22,7 +22,7 @@ app.use(clerkMiddleware())
 app.use("/webhooks", webhookRouter)
 app.use(express.json())
 
-app.get('hello', (req, res) => {
+app.get('/hello', (req, res) => {
     res.send('Hello test')
 })
 
