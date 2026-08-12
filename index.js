@@ -7,7 +7,7 @@ import webhookRouter from "./routes/webhook.route.js"
 import dotenv from "dotenv";
 import { clerkMiddleware, requireAuth } from "@clerk/express";
 import cors from "cors"
-import keepAliveCron from "./lib/keepAliveCron.js"
+import keepAliveCron from "./lib/cron.js"
 
 dotenv.config();
 
