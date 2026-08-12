@@ -7,6 +7,7 @@ import webhookRouter from "./routes/webhook.route.js"
 import dotenv from "dotenv";
 import { clerkMiddleware, requireAuth } from "@clerk/express";
 import cors from "cors"
+import keepAliveCron from "./lib/keepAliveCron.js"
 
 dotenv.config();
 
@@ -41,7 +42,12 @@ app.use((error, req, res, next) => {
     })
 })
 
+app.get("/health", (_req, res) => {
+    res.json({ ok: true })
+})
+
 app.listen(PORT, () => {
     connectDB()
     console.log("Server running!")
+    keepAliveCron.start()
 })
